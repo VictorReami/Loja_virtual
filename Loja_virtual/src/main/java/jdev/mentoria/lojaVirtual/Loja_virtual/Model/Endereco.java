@@ -1,6 +1,7 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Model;
 
 import jakarta.persistence.*;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.TipoEndereco;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,9 @@ public class Endereco implements Serializable {
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
     private Pessoa pessoa;
+
+    @Enumerated(EnumType.STRING)
+    private TipoEndereco tipoEndereco;
 
     @Override
     public boolean equals(Object o) {

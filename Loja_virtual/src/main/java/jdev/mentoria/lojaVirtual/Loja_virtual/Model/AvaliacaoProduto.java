@@ -24,7 +24,11 @@ public class AvaliacaoProduto implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_avaliacao_produto")
     private Long id;
 
+    @Column(nullable = false)
     private Integer nota;
+
+    @Column(nullable = false)
+    private String descricao;
 
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
@@ -33,8 +37,6 @@ public class AvaliacaoProduto implements Serializable {
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
     private Produto produto;
-
-    private String descricao;
 
     @Override
     public boolean equals(Object o) {

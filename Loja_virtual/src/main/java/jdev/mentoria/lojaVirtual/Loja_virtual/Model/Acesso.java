@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -27,5 +29,18 @@ public class Acesso implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return this.descricao;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Acesso acesso = (Acesso) o;
+        return Objects.equals(getId(), acesso.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

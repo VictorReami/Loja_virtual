@@ -25,7 +25,7 @@ public class WebConfigSecurity  {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.GET, "/acesso", "/obterAcesso/{id}", "//buscarPorDesc/{desc}").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/acesso", "/obterAcesso/{id}", "/buscarPorDesc/{desc}").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/salvarAcesso", "/deleteAcesso").permitAll();
                     req.requestMatchers(HttpMethod.DELETE, "/deleteAcessoPorId").permitAll();
                     req.anyRequest().authenticated();

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.objectweb.asm.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 
+@Profile("test")
 @SpringBootTest(classes = LojaVirtualApplication.class)
 public class LojaVirtualMentoriaApplicationTests {
 
@@ -183,7 +185,7 @@ public class LojaVirtualMentoriaApplicationTests {
 
 		Acesso acesso = new Acesso();
 
-		acesso.setDescricao("ROLE_OBTER_ID");
+		//acesso.setDescricao("ROLE_OBTER_ID");
 
 		acesso = acessoRepository.save(acesso);
 

@@ -1,8 +1,10 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 //import jakarta.servlet.http.HttpServletResponse;
+import io.jsonwebtoken.SignatureException;
 import jdev.mentoria.lojaVirtual.Loja_virtual.ApplicationContextLoad;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Usuario;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.UsuarioRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 
 /*Criar a autenticação e reotornar tambem a autenticação JWT */
@@ -52,36 +55,43 @@ public class JWTTokenAutenticacaoService {
     }
 
     /*Retorna o usuário validado com token ou caso não seja valido retorn null*/
-    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response){
+    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String token = request.getHeader(HEADER_STRING);
 
-        if(token != null){
-            String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
+        try {
+            if (token != null) {
+                String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
 
-            /*faz a validação do token do usuário na requisição e obtem o USER*/
-            String user = Jwts.parser()
-                    .setSigningKey(SECRET)
-                    .parseClaimsJws(tokenLimpo)
-                    .getBody()
-                    .getSubject(); /*ADM ou Victor*/
+                /*faz a validação do token do usuário na requisição e obtem o USER*/
+                String user = Jwts.parser()
+                        .setSigningKey(SECRET)
+                        .parseClaimsJws(tokenLimpo)
+                        .getBody()
+                        .getSubject(); /*ADM ou Victor*/
 
-            if(user != null){
-                Usuario usuario = ApplicationContextLoad
-                        .getApplicationContext()
-                        .getBean(UsuarioRepository.class)
-                        .findUserByLogin(user);
+                if (user != null) {
+                    Usuario usuario = ApplicationContextLoad
+                            .getApplicationContext()
+                            .getBean(UsuarioRepository.class)
+                            .findUserByLogin(user);
 
-                if(usuario != null){
-                    return new UsernamePasswordAuthenticationToken(usuario.getLogin()
-                                                                  ,usuario.getSenha()
-                                                                  ,usuario.getAuthorities());
+                    if (usuario != null) {
+                        return new UsernamePasswordAuthenticationToken(usuario.getLogin()
+                                , usuario.getSenha()
+                                , usuario.getAuthorities());
+                    }
+
                 }
-
             }
+        }catch (SignatureException e){
+            response.getWriter().write("Token está inválido");
+        }catch (ExpiredJwtException e){
+            response.getWriter().write("Token está expirado, efetue o login novamente");
+        }finally {  //Sempre retornara a liberação do CORS
+            liberacaoCors(response);
         }
 
-        liberacaoCors(response);
         return null;
 
     }

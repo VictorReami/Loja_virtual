@@ -14,13 +14,20 @@ public class JwtApiAutenticacaoFilter extends GenericFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         /*Estabelece a autenticação do user*/
 
-        Authentication authentication = new JWTTokenAutenticacaoService()
-                .getAuthentication((HttpServletRequest)request, (HttpServletResponse) response);
+        try {
 
-        /*Coloca o processo de autenticacao para o spring security*/
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            Authentication authentication = new JWTTokenAutenticacaoService()
+                    .getAuthentication((HttpServletRequest) request, (HttpServletResponse) response);
 
-        chain.doFilter(request, response);
+            /*Coloca o processo de autenticacao para o spring security*/
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            chain.doFilter(request, response);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            response.getWriter().write("Ocorreu um erro no sistema, avise o administrador: \n" + e.getMessage());
+        }
 
     }
 }

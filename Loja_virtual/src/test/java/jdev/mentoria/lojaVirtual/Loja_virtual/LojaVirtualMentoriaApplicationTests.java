@@ -69,7 +69,7 @@ public class LojaVirtualMentoriaApplicationTests {
 
 
     @Test
-	public void testCadastraAcesso() {
+	public void testCadastraAcesso() throws ExceptionMentoriaJava {
 
 		Acesso acesso = new Acesso();
 

@@ -22,6 +22,16 @@ import java.util.List;
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(ExceptionMentoriaJava.class)
+    public ResponseEntity<Object> handleExcptionCustom(ExceptionMentoriaJava ex){
+        ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+
+        objetoErroDTO.setError(ex.getMessage());
+        objetoErroDTO.setCode(HttpStatus.OK.toString());
+
+        return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
+    }
+
     /*Captura exceções*/
     @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     @Override
@@ -46,7 +56,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**Captura erro na parte de Banco de dados*/,
+    /**Captura erro na parte de Banco de dados*/
     @ExceptionHandler({DataIntegrityViolationException.class, ConstraintViolationException.class, SQLException.class})
     protected ResponseEntity<Object> handleExceptionDataIntegry(Exception ex){
         ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
@@ -67,7 +77,6 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
         objetoErroDTO.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
 
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
-
     }
 
 

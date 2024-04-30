@@ -55,6 +55,10 @@ public class NotaFiscalCompra implements Serializable {
     @JoinColumn(name = "conta_pagar_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "contaPagar_fk"))
     private ContaPagar contaPagar;
 
+    @ManyToOne(targetEntity = Pessoa.class)
+    @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+    private Pessoa empresa;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class LojaVirtualMentoriaApplicationTests {
 
 		Acesso acesso = new Acesso();
 
-		acesso.setDescricao("ROLE_COMPRADOR");
+		acesso.setDescricao("ROLE_COMPRADOR" + Calendar.getInstance().getTimeInMillis());
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -70,10 +71,11 @@ public class LojaVirtualMentoriaApplicationTests {
 
     @Test
 	public void testCadastraAcesso() throws ExceptionMentoriaJava {
+		String descAcesso = "ROLE_ADMIN" + Calendar.getInstance().getTimeInMillis();
 
 		Acesso acesso = new Acesso();
 
-		acesso.setDescricao("ROLE_ADMIN");
+		acesso.setDescricao(descAcesso);
 
 		Assertions.assertEquals(true, acesso.getId() == null);
 
@@ -83,7 +85,7 @@ public class LojaVirtualMentoriaApplicationTests {
 		Assertions.assertEquals(true,acesso.getId() > 0);
 
 		/*Validar dados salvos da forma correta*/
-		Assertions.assertEquals("ROLE_ADMIN", acesso.getDescricao());
+		Assertions.assertEquals(descAcesso, acesso.getDescricao());
 
 		/*Teste de carregamento*/
 

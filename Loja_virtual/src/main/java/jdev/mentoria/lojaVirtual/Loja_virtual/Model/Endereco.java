@@ -54,6 +54,10 @@ public class Endereco implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoEndereco tipoEndereco;
 
+    @ManyToOne(targetEntity = Pessoa.class)
+    @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
+    private Pessoa empresa;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

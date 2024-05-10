@@ -1,5 +1,6 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Controller.PessoaController;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaRepository;
@@ -10,32 +11,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
+import java.util.Calendar;
+
 @Profile("test")
 @SpringBootTest(classes = LojaVirtualApplication.class)
 public class TestePessoaUsuario extends TestCase {
 
     @Autowired
-    private  PessoaUsuarioService pessoaUsuarioService;
-
-    @Autowired
-    private PessoaRepository pessoaRepository;
+    private PessoaController pessoaController;
 
     @Test
-    public void testeCadPessoa(){
+    public void testeCadPessoa() throws ExceptionMentoriaJava {
 
 
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
-        pessoaJuridica.setCnpj("898951951");
+        pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
         pessoaJuridica.setNome("Victor Reami");
-        pessoaJuridica.setEmail("Victor.mreami@gmail.com");
+        pessoaJuridica.setEmail("teste@gmail.com");
         pessoaJuridica.setTelefone("1651651");
         pessoaJuridica.setInscEstadual("9.62.6262+");
         pessoaJuridica.setInscMunicipal("655665565");
         pessoaJuridica.setNomeFantasia("498asdasdasd");
         pessoaJuridica.setRazaoSocial("5555555");
 
-        pessoaRepository.save(pessoaJuridica);
+        pessoaController.salvarPJ(pessoaJuridica);
 
 /*
         PessoaFisica pessoaFisica = new PessoaFisica();
@@ -48,8 +48,4 @@ public class TestePessoaUsuario extends TestCase {
 
 
     }
-
-
-
-
 }

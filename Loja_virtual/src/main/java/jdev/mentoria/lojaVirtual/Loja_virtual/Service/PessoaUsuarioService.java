@@ -19,10 +19,13 @@ public class PessoaUsuarioService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PessoaUsuarioService(UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository, JdbcTemplate jdbcTemplate) {
+    private final ServiceSendEmail serviceSendEmail;
+
+    public PessoaUsuarioService(UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository, JdbcTemplate jdbcTemplate, ServiceSendEmail serviceSendEmail) {
         this.usuarioRepository = usuarioRepository;
         this.pessoaRepository = pessoaRepository;
         this.jdbcTemplate = jdbcTemplate;
+        this.serviceSendEmail = serviceSendEmail;
     }
 
 
@@ -61,6 +64,19 @@ public class PessoaUsuarioService {
 
             usuarioRepository.insereAcessoUsuarioPJ(usuarioPJ.getId());
 
+            StringBuilder menssagemHtml = new StringBuilder();
+
+            menssagemHtml.append("<b>Segue abaixo seus dados de acesso a loja virtual.</b>");
+            menssagemHtml.append("<b>Login: </b>" + pessoaJuridica.getEmail() + "<b></b>");
+            menssagemHtml.append("<b>Senha: </b>").append(senha).append("<b></b>");
+            menssagemHtml.append("Obrigado!");
+
+
+            try {
+                serviceSendEmail.enviaremailHtml("Acesso gerado para loja Virtual", menssagemHtml.toString(), pessoaJuridica.getEmail());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return pessoaJuridica;

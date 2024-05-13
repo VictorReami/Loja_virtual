@@ -1,6 +1,8 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual;
 
 import jdev.mentoria.lojaVirtual.Loja_virtual.Controller.PessoaController;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.TipoEndereco;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Endereco;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaRepository;
@@ -27,7 +29,7 @@ public class TestePessoaUsuario extends TestCase {
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
 
         pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
-        pessoaJuridica.setNome("Victor Reami");
+        pessoaJuridica.setNome("Victor Reamii");
         pessoaJuridica.setEmail("teste@gmail.com");
         pessoaJuridica.setTelefone("1651651");
         pessoaJuridica.setInscEstadual("9.62.6262+");
@@ -35,7 +37,44 @@ public class TestePessoaUsuario extends TestCase {
         pessoaJuridica.setNomeFantasia("498asdasdasd");
         pessoaJuridica.setRazaoSocial("5555555");
 
-        pessoaController.salvarPJ(pessoaJuridica);
+        Endereco endereco1 = new Endereco();
+        endereco1.setBairro("Pq novo mundo");
+        endereco1.setCep("123123");
+        endereco1.setComplemento("apto");
+        endereco1.setEmpresa(pessoaJuridica);
+        endereco1.setNumero("45");
+        endereco1.setPessoa(pessoaJuridica);
+        endereco1.setRuaLogradouro("Rua Itu");
+        endereco1.setTipoEndereco(TipoEndereco.COBRANCA);
+        endereco1.setUf("Sp");
+        endereco1.setCidade("Americana");
+
+
+        Endereco endereco2 = new Endereco();
+        endereco2.setBairro("Vila Bertini");
+        endereco2.setCep("123123333");
+        endereco2.setComplemento("apto");
+        endereco2.setEmpresa(pessoaJuridica);
+        endereco2.setNumero("45asda");
+        endereco2.setPessoa(pessoaJuridica);
+        endereco2.setRuaLogradouro("Rua aaaaa");
+        endereco2.setTipoEndereco(TipoEndereco.ENTREGA);
+        endereco2.setUf("Sp");
+        endereco2.setCidade("Americana");
+
+
+        pessoaJuridica.getEnderecos().add(endereco2);
+        pessoaJuridica.getEnderecos().add(endereco1);
+
+        pessoaJuridica = pessoaController.salvarPJ(pessoaJuridica).getBody();
+
+        assertEquals(false, pessoaJuridica.getId() > 0);
+
+        for (Endereco endereco : pessoaJuridica.getEnderecos() ){
+            assertEquals(true, endereco.getId() > 0);
+        }
+
+        assertEquals(2, pessoaJuridica.getEnderecos().size());
 
 /*
         PessoaFisica pessoaFisica = new PessoaFisica();

@@ -7,9 +7,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
+
+    @Query(value = "SELECT u FROM Usuario u WHERE u.dataAtualSenha <= current_date - 6")
+    List<Usuario> usuarioSenhvencida();
 
     @Query(value = "select u from Usuario u where u.login = ?1")
     Usuario findUserByLogin(String login);
@@ -24,9 +28,15 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
                     "AND constraint_name != 'unique_acesso_user';", nativeQuery = true)
     String consultaContraintAcesso();
 
-
+/*
     @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "INSERT INTO usuarios_acesso (usuario_id, acesso_id)VALUES(?1, (SELECT id FROM acesso WHERE descricao = 'ROLE_USER'))")
-    void insereAcessoUsuarioPJ(Long id);
+    void insereAcessoUsuarioPJ(Long id);*/
+
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "INSERT INTO usuarios_acesso (usuario_id, acesso_id)VALUES(?1, (SELECT id FROM acesso WHERE descricao = ?2 limit 1))")
+    void insereAcessoUsuarioPJ(Long id,String acesso);
 }

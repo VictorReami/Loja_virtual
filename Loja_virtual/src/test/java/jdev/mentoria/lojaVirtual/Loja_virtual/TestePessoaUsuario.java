@@ -30,7 +30,7 @@ public class TestePessoaUsuario extends TestCase {
 
         pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
         pessoaJuridica.setNome("Victor Reamii");
-        pessoaJuridica.setEmail("teste@gmail.com");
+        pessoaJuridica.setEmail("vitor.molina1@gmail.com");
         pessoaJuridica.setTelefone("1651651");
         pessoaJuridica.setInscEstadual("9.62.6262+");
         pessoaJuridica.setInscMunicipal("655665565");
@@ -68,7 +68,7 @@ public class TestePessoaUsuario extends TestCase {
 
         pessoaJuridica = pessoaController.salvarPJ(pessoaJuridica).getBody();
 
-        assertEquals(false, pessoaJuridica.getId() > 0);
+        assertEquals(true, pessoaJuridica.getId() > 0);
 
         for (Endereco endereco : pessoaJuridica.getEnderecos() ){
             assertEquals(true, endereco.getId() > 0);

@@ -44,7 +44,7 @@ public class ServiceSendEmail {
         message.setFrom(new InternetAddress(userName, "Victor - do Java Web", "UTF-8"));
         message.setRecipients(Message.RecipientType.TO, toUser);
         message.setSubject(assunto);
-        message.setText(menssagem);
+        message.setContent(menssagem, "text/html; charset=utf-8");
 
         Transport.send(message);
 

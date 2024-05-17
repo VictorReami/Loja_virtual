@@ -62,12 +62,13 @@ public class PessoaUsuarioService {
 
             usuarioPJ = usuarioRepository.save(usuarioPJ);
 
-            usuarioRepository.insereAcessoUsuarioPJ(usuarioPJ.getId());
+            usuarioRepository.insereAcessoUsuarioPJ(usuarioPJ.getId(), "ROLE_USER");
+            usuarioRepository.insereAcessoUsuarioPJ(usuarioPJ.getId(), "ROLE_ADMIN");
 
             StringBuilder menssagemHtml = new StringBuilder();
 
-            menssagemHtml.append("<b>Segue abaixo seus dados de acesso a loja virtual.</b>");
-            menssagemHtml.append("<b>Login: </b>" + pessoaJuridica.getEmail() + "<b></b>");
+            menssagemHtml.append("<b>Segue abaixo seus dados de acesso a loja virtual.</b><b/>");
+            menssagemHtml.append("<b>Login: </b>" + pessoaJuridica.getEmail() + "</b>");
             menssagemHtml.append("<b>Senha: </b>").append(senha).append("<b></b>");
             menssagemHtml.append("Obrigado!");
 

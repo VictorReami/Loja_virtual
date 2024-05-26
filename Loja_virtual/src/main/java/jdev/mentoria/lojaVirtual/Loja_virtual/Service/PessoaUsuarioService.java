@@ -1,7 +1,9 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Usuario;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaFisicaRepository;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaRepository;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.UsuarioRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,67 +23,125 @@ public class PessoaUsuarioService {
 
     private final ServiceSendEmail serviceSendEmail;
 
-    public PessoaUsuarioService(UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository, JdbcTemplate jdbcTemplate, ServiceSendEmail serviceSendEmail) {
+    private final PessoaFisicaRepository pessoaFisicaRepository;
+
+    public PessoaUsuarioService(UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository, JdbcTemplate jdbcTemplate, ServiceSendEmail serviceSendEmail, PessoaFisicaRepository pessoaFisicaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.pessoaRepository = pessoaRepository;
         this.jdbcTemplate = jdbcTemplate;
         this.serviceSendEmail = serviceSendEmail;
+        this.pessoaFisicaRepository = pessoaFisicaRepository;
+
     }
 
 
 
-    public PessoaJuridica salvarPessoaJuridica(PessoaJuridica pessoaJuridica){
+    public PessoaJuridica salvarPessoaJuridica(PessoaJuridica juridica) {
 
-        //pessoaJuridica = pessoaRepository.save(pessoaJuridica);
+        //juridica = pesssoaRepository.save(juridica);
 
-        for (int i = 0; i < pessoaJuridica.getEnderecos().size(); i++){
-            pessoaJuridica.getEnderecos().get(i).setPessoa(pessoaJuridica);
-            pessoaJuridica.getEnderecos().get(i).setEmpresa(pessoaJuridica);
+        for (int i = 0; i< juridica.getEnderecos().size(); i++) {
+            juridica.getEnderecos().get(i).setPessoa(juridica);
+            juridica.getEnderecos().get(i).setEmpresa(juridica);
         }
 
-        pessoaJuridica = pessoaRepository.save(pessoaJuridica);
+        juridica = pessoaRepository.save(juridica);
 
-        Usuario usuarioPJ = usuarioRepository.findUserByPessoa(pessoaJuridica.getId(), pessoaJuridica.getEmail());
+        Usuario usuarioPj = usuarioRepository.findUserByPessoa(juridica.getId(), juridica.getEmail());
 
-        if(usuarioPJ == null){
-            String constraint = usuarioRepository.consultaContraintAcesso();
+        if (usuarioPj == null) {
+
+            String constraint = usuarioRepository.consultaConstraintAcesso();
             if (constraint != null) {
                 jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint " + constraint +"; commit;");
             }
 
-            usuarioPJ = new Usuario();
-            usuarioPJ.setDataAtualSenha(Calendar.getInstance().getTime());
-            usuarioPJ.setEmpresa(pessoaJuridica);
-            usuarioPJ.setPessoa(pessoaJuridica);
-            usuarioPJ.setLogin(pessoaJuridica.getEmail());
+            usuarioPj = new Usuario();
+            usuarioPj.setDataAtualSenha(Calendar.getInstance().getTime());
+            usuarioPj.setEmpresa(juridica);
+            usuarioPj.setPessoa(juridica);
+            usuarioPj.setLogin(juridica.getEmail());
 
             String senha = "" + Calendar.getInstance().getTimeInMillis();
             String senhaCript = new BCryptPasswordEncoder().encode(senha);
 
-            usuarioPJ.setSenha(senhaCript);
+            usuarioPj.setSenha(senhaCript);
 
-            usuarioPJ = usuarioRepository.save(usuarioPJ);
+            usuarioPj = usuarioRepository.save(usuarioPj);
 
-            usuarioRepository.insereAcessoUsuarioPJ(usuarioPJ.getId(), "ROLE_USER");
-            usuarioRepository.insereAcessoUsuarioPJ(usuarioPJ.getId(), "ROLE_ADMIN");
+            usuarioRepository.insereAcessoUser(usuarioPj.getId());
+            usuarioRepository.insereAcessoUsuarioPJ(usuarioPj.getId(), "ROLE_ADMIN");
 
             StringBuilder menssagemHtml = new StringBuilder();
 
-            menssagemHtml.append("<b>Segue abaixo seus dados de acesso a loja virtual.</b><b/>");
-            menssagemHtml.append("<b>Login: </b>" + pessoaJuridica.getEmail() + "</b>");
-            menssagemHtml.append("<b>Senha: </b>").append(senha).append("<b></b>");
+            menssagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual</b><br/>");
+            menssagemHtml.append("<b>Login: </b>"+juridica.getEmail()+"<br/>");
+            menssagemHtml.append("<b>Senha: </b>").append(senha).append("<br/><br/>");
             menssagemHtml.append("Obrigado!");
 
-
             try {
-                serviceSendEmail.enviaremailHtml("Acesso gerado para loja Virtual", menssagemHtml.toString(), pessoaJuridica.getEmail());
-            }catch (Exception e){
+                serviceSendEmail.enviaremailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , juridica.getEmail());
+            }catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
 
-        return pessoaJuridica;
+        return juridica;
 
+    }
+
+
+    public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) {
+        //juridica = pesssoaRepository.save(juridica);
+
+        for (int i = 0; i< pessoaFisica.getEnderecos().size(); i++) {
+            pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
+            //pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica);
+        }
+
+        pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
+
+        Usuario usuarioPj = usuarioRepository.findUserByPessoa(pessoaFisica.getId(), pessoaFisica.getEmail());
+
+        if (usuarioPj == null) {
+
+            String constraint = usuarioRepository.consultaConstraintAcesso();
+            if (constraint != null) {
+                jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint " + constraint +"; commit;");
+            }
+
+            usuarioPj = new Usuario();
+            usuarioPj.setDataAtualSenha(Calendar.getInstance().getTime());
+            usuarioPj.setEmpresa(pessoaFisica.getEmpresa());
+            usuarioPj.setPessoa(pessoaFisica);
+            usuarioPj.setLogin(pessoaFisica.getEmail());
+
+            String senha = "" + Calendar.getInstance().getTimeInMillis();
+            String senhaCript = new BCryptPasswordEncoder().encode(senha);
+
+            usuarioPj.setSenha(senhaCript);
+
+            usuarioPj = usuarioRepository.save(usuarioPj);
+
+            usuarioRepository.insereAcessoUser(usuarioPj.getId());
+
+            StringBuilder menssagemHtml = new StringBuilder();
+
+            menssagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual</b><br/>");
+            menssagemHtml.append("<b>Login: </b>"+pessoaFisica.getEmail()+"<br/>");
+            menssagemHtml.append("<b>Senha: </b>").append(senha).append("<br/><br/>");
+            menssagemHtml.append("Obrigado!");
+
+            try {
+                serviceSendEmail.enviaremailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , pessoaFisica.getEmail());
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return pessoaFisica;
     }
 
 }

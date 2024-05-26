@@ -1,5 +1,6 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Repository;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -8,8 +9,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PessoaRepository extends CrudRepository<PessoaJuridica, Long> {
 
-    @Query(value = "SELECT pj FROM PessoaJuridica pj WHERE pj.cnpj = ?1")
+    @Query(value = "select pj from PessoaJuridica pj where pj.cnpj = ?1")
     public PessoaJuridica existeCnpjCadastrado(String cnpj);
+
+
+    @Query(value = "select pf from PessoaFisica pf where pf.cpf = ?1")
+    public PessoaFisica existeCpfCadastrado(String cpf);
+
+
+    @Query(value = "select pj from PessoaJuridica pj where pj.inscEstadual = ?1")
+    public PessoaJuridica existeInsEstadualCadastrado(String inscEstadual);
 
 
 }

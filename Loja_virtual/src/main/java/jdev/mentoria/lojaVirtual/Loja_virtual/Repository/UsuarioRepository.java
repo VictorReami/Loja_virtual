@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
-    @Query(value = "SELECT u FROM Usuario u WHERE u.dataAtualSenha <= current_date - 6")
+    @Query(value = "SELECT u FROM Usuario u WHERE u.dataAtualSenha <= current_date - 90")
     List<Usuario> usuarioSenhvencida();
 
     @Query(value = "select u from Usuario u where u.login = ?1")
@@ -21,18 +21,13 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
     @Query(value = "select u from Usuario u where u.pessoa.id = ?1 or u.login =?2")
     Usuario findUserByPessoa(Long id, String email);
 
-    @Query(value = "SELECT CONSTRAINT_NAME\n" +
-                    "FROM information_schema.constraint_column_usage\n" +
-                    "WHERE table_name = 'usuarios_acesso'\n" +
-                    "AND column_name = 'acesso_id'\n" +
-                    "AND constraint_name != 'unique_acesso_user';", nativeQuery = true)
-    String consultaContraintAcesso();
+    @Query(value = "select constraint_name from information_schema.constraint_column_usage where table_name = 'usuarios_acesso' and column_name = 'acesso_id' and constraint_name <> 'unique_acesso_user';", nativeQuery = true)
+    String consultaConstraintAcesso();
 
-/*
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = "INSERT INTO usuarios_acesso (usuario_id, acesso_id)VALUES(?1, (SELECT id FROM acesso WHERE descricao = 'ROLE_USER'))")
-    void insereAcessoUsuarioPJ(Long id);*/
+    @Query(nativeQuery = true, value = "insert into usuarios_acesso(usuario_id, acesso_id) values (?1, (select id from acesso where descricao = 'ROLE_USER'))")
+    void insereAcessoUser(Long iduser);
 
 
     @Transactional

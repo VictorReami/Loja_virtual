@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CNPJ;
 
 @Entity
 @Getter
@@ -21,6 +22,7 @@ public class PessoaJuridica extends Pessoa{
 
     private static final long SerialVersionUID = 1L;
 
+    @CNPJ(message = "CNPJ está inválido")
     @Column(nullable = false)
     private String cnpj;
 

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,6 +22,7 @@ public class PessoaFisica extends Pessoa{
 
     private static final long SerialVersionUID = 1L;
 
+    @CPF(message = "CPF está inválido")
     @Column(nullable = false)
     private String cpf;
 

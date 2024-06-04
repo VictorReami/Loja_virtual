@@ -1,6 +1,8 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual;
 
 import Model.DTO.ObjetoErroDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Service.ServiceSendEmail;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.coyote.Response;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,12 +18,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
 
 @RestControllerAdvice
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
+
+    private final ServiceSendEmail serviceSendEmail;
+
+    public ControleExcecoes(ServiceSendEmail serviceSendEmail) {
+        this.serviceSendEmail = serviceSendEmail;
+    }
 
     @ExceptionHandler(ExceptionMentoriaJava.class)
     public ResponseEntity<Object> handleExcptionCustom(ExceptionMentoriaJava ex){
@@ -56,6 +66,14 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
         objetoErroDTO.setError(msg);
         objetoErroDTO.setCode(status.value() + " ==> " + status.getReasonPhrase());
 
+        ex.printStackTrace();
+
+        try {
+            serviceSendEmail.enviaremailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "mestrezeh@gmail.com");
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -78,6 +96,14 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 
         objetoErroDTO.setError(msg);
         objetoErroDTO.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+
+        ex.printStackTrace();
+
+        try {
+            serviceSendEmail.enviaremailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "mestrezeh@gmail.com");
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }

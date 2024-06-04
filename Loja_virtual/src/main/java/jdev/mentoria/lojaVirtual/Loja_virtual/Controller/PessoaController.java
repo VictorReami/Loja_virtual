@@ -6,7 +6,8 @@ import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Endereco;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.EnderecoRepository;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaRepository;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaFisicaRepository;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaJuridicaRepository;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.PessoaUsuarioService;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Util.ValidaCNPJ;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Util.ValidaCPF;
@@ -16,19 +17,54 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RestController
 public class PessoaController {
 
-    private final PessoaRepository pessoaRepository;
+    private final PessoaJuridicaRepository pessoaJuridicaRepository;
     private final PessoaUsuarioService pessoaUsuarioService;
     private final EnderecoRepository enderecoRepository;
+    private final PessoaFisicaRepository pessoaFisicaRepository;
 
-    public PessoaController(PessoaRepository pessoaRepository, PessoaUsuarioService pessoaUsuarioService, EnderecoRepository enderecoRepository) {
-        this.pessoaRepository = pessoaRepository;
+    public PessoaController(PessoaJuridicaRepository pessoaJuridicaRepository, PessoaUsuarioService pessoaUsuarioService, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository) {
+        this.pessoaJuridicaRepository = pessoaJuridicaRepository;
         this.pessoaUsuarioService = pessoaUsuarioService;
         this.enderecoRepository = enderecoRepository;
+        this.pessoaFisicaRepository = pessoaFisicaRepository;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "consultaNomePessoaFisica/{nome}")
+    public ResponseEntity<List<PessoaFisica>> consultaNomePessoaFisica(@PathVariable("nome") String nome){
+        List<PessoaFisica> pessoaFisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
+
+        return new ResponseEntity<List<PessoaFisica>>(pessoaFisicas, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "consultaCPF/{cpf}")
+    public ResponseEntity<List<PessoaFisica>> consultaCPF(@PathVariable("cpf") String cpf){
+        List<PessoaFisica> pessoaFisicas = pessoaFisicaRepository.pesquisaPorCPF(cpf.trim().toUpperCase());
+
+        return new ResponseEntity<List<PessoaFisica>>(pessoaFisicas, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "consultaNomePJ/{nome}")
+    public ResponseEntity<List<PessoaJuridica>> consultaNomePJ(@PathVariable("nome") String nome){
+        List<PessoaJuridica> pessoaJuridicas = pessoaJuridicaRepository.pesquisaPorNomePJ(nome.trim().toUpperCase());
+
+        return new ResponseEntity<List<PessoaJuridica>>(pessoaJuridicas, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "consultaCNPJ/{cnpj}")
+    public ResponseEntity<List<PessoaJuridica>> consultaCNPJ(@PathVariable("cnpj") String cnpj){
+        List<PessoaJuridica> pessoaJuridicas = pessoaJuridicaRepository.existeCnpjCadastradoList(cnpj.trim().toUpperCase());
+
+        return new ResponseEntity<List<PessoaJuridica>>(pessoaJuridicas, HttpStatus.OK);
     }
 
     @ResponseBody
@@ -37,7 +73,6 @@ public class PessoaController {
         CepDTO cepDTO = pessoaUsuarioService.consultaCEP(cep);
 
         return new ResponseEntity<CepDTO>(cepDTO, HttpStatus.OK);
-
     }
 
     @ResponseBody
@@ -48,12 +83,12 @@ public class PessoaController {
             throw new ExceptionMentoriaJava("Pessoa juridica nao pode ser NULL");
         }
 
-        if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
+        if (pessoaJuridica.getId() == null && pessoaJuridicaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
             throw new ExceptionMentoriaJava("Já existe CNPJ cadastrado com o número: " + pessoaJuridica.getCnpj());
         }
 
 
-        if (pessoaJuridica.getId() == null && pessoaRepository.existeInsEstadualCadastrado(pessoaJuridica.getInscEstadual()) != null) {
+        if (pessoaJuridica.getId() == null && pessoaJuridicaRepository.existeInsEstadualCadastrado(pessoaJuridica.getInscEstadual()) != null) {
             throw new ExceptionMentoriaJava("Já existe Inscrição estadual cadastrado com o número: " + pessoaJuridica.getInscEstadual());
         }
 
@@ -103,7 +138,7 @@ public class PessoaController {
             throw new ExceptionMentoriaJava("Pessoa fisica não pode ser NULL");
         }
 
-        if (pessoaFisica.getId() == null && pessoaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
+        if (pessoaFisica.getId() == null && pessoaJuridicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
             throw new ExceptionMentoriaJava("Já existe CPF cadastrado com o número: " + pessoaFisica.getCpf());
         }
 

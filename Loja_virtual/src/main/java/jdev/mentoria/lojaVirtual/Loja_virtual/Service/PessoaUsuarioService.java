@@ -5,7 +5,7 @@ import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Usuario;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaFisicaRepository;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaRepository;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaJuridicaRepository;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.UsuarioRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -19,7 +19,8 @@ import java.util.Calendar;
 public class PessoaUsuarioService {
     private final UsuarioRepository usuarioRepository;
 
-    private final PessoaRepository pessoaRepository;
+    private final PessoaJuridicaRepository pessoaJuridicaRepository;
+
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -27,9 +28,9 @@ public class PessoaUsuarioService {
 
     private final PessoaFisicaRepository pessoaFisicaRepository;
 
-    public PessoaUsuarioService(UsuarioRepository usuarioRepository, PessoaRepository pessoaRepository, JdbcTemplate jdbcTemplate, ServiceSendEmail serviceSendEmail, PessoaFisicaRepository pessoaFisicaRepository) {
+    public PessoaUsuarioService(UsuarioRepository usuarioRepository, PessoaJuridicaRepository pessoaJuridicaRepository, JdbcTemplate jdbcTemplate, ServiceSendEmail serviceSendEmail, PessoaFisicaRepository pessoaFisicaRepository) {
         this.usuarioRepository = usuarioRepository;
-        this.pessoaRepository = pessoaRepository;
+        this.pessoaJuridicaRepository = pessoaJuridicaRepository;
         this.jdbcTemplate = jdbcTemplate;
         this.serviceSendEmail = serviceSendEmail;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
@@ -47,7 +48,7 @@ public class PessoaUsuarioService {
             juridica.getEnderecos().get(i).setEmpresa(juridica);
         }
 
-        juridica = pessoaRepository.save(juridica);
+        juridica = pessoaJuridicaRepository.save(juridica);
 
         Usuario usuarioPj = usuarioRepository.findUserByPessoa(juridica.getId(), juridica.getEmail());
 

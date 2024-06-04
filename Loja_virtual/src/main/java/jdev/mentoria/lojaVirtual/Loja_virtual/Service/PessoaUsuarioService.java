@@ -1,5 +1,6 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 
+import Model.DTO.CepDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Usuario;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Calendar;
 
@@ -142,6 +144,11 @@ public class PessoaUsuarioService {
         }
 
         return pessoaFisica;
+    }
+
+    //Api de consulta de CEP
+    public CepDTO consultaCEP(String cep) {
+        return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json", CepDTO.class).getBody();
     }
 
 }

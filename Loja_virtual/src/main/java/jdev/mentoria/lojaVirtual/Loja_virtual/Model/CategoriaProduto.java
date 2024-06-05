@@ -1,6 +1,7 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Model;
 
 //import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +28,10 @@ public class CategoriaProduto implements Serializable {
     @Column(nullable = false)
     private String nomeDesc;
 
+
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa = new PessoaJuridica();
 
     @Override
     public boolean equals(Object o) {

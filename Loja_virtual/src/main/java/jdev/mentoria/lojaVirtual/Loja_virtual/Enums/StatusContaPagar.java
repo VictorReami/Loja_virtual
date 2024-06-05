@@ -1,5 +1,8 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Enums;
 
+import lombok.Getter;
+
+@Getter
 public enum StatusContaPagar {
     COBRANCA("Pagar"),
     VENCIDA("Vencia"),

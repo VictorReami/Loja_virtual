@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,18 +30,25 @@ public class ContaPagar implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_pagar")
     private Long id;
 
+   // @NotEmpty(message = "Informe o campo descrição da conta a pagar.")
+    @NotNull(message = "Informe o campo descrição da conta a pagar.")
     @Column(nullable = false)
     private String descricao;
 
+   // @NotEmpty(message = "Informe o valor total da conta a pagar.")
+    @NotNull(message = "Informe o valor total da conta a pagar.")
     @Column(nullable = false)
     private BigDecimal valorTotal;
 
     private BigDecimal valorDesconto;
 
+    @NotNull(message = "Informe o status da conta a pagar.")
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusContaPagar status;
 
+    //@NotEmpty(message = "Informe a data de vencimento da conta a pagar.")
+    @NotNull(message = "Informe a data de vencimento da conta a pagar.")
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dtVencimento;
@@ -47,17 +56,17 @@ public class ContaPagar implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dtPagamento;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaFisica.class)
     @JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
-    private Pessoa pessoa;
+    private PessoaFisica pessoaFisica;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "pessoa_fornecedor_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fornecedor_fk"))
-    private Pessoa pessoa_fornecedor;
+    private PessoaJuridica pessoa_fornecedor;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
     @Override
     public boolean equals(Object o) {

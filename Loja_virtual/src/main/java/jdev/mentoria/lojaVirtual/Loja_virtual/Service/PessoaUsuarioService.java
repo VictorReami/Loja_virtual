@@ -84,7 +84,7 @@ public class PessoaUsuarioService {
             menssagemHtml.append("Obrigado!");
 
             try {
-                serviceSendEmail.enviaremailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , juridica.getEmail());
+                serviceSendEmail.enviarEmailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , juridica.getEmail());
             }catch (Exception e) {
                 e.printStackTrace();
             }
@@ -138,7 +138,7 @@ public class PessoaUsuarioService {
             menssagemHtml.append("Obrigado!");
 
             try {
-                serviceSendEmail.enviaremailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , pessoaFisica.getEmail());
+                serviceSendEmail.enviarEmailHtml("Acesso Gerado para Loja Virtual", menssagemHtml.toString() , pessoaFisica.getEmail());
             }catch (Exception e) {
                 e.printStackTrace();
             }

@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -78,7 +80,7 @@ public class Produto implements Serializable {
     private Integer qtdeClick = 0;
 
     @NotNull(message = "A empresa responsável deve ser informada")
-    @ManyToOne(targetEntity = Pessoa.class)
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;
 
@@ -91,6 +93,9 @@ public class Produto implements Serializable {
     @ManyToOne(targetEntity = MarcaProduto.class)
     @JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
     private MarcaProduto marcaProduto = new MarcaProduto();
+
+    @OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ImagemProduto> imagemProduto = new ArrayList<ImagemProduto>();
 
    /* @NotNull(message = "A Nota Item do Produto deve ser informada")
     @ManyToOne(targetEntity = NotaItemProduto.class)

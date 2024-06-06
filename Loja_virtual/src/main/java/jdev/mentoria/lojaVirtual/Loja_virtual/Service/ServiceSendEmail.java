@@ -16,7 +16,7 @@ public class ServiceSendEmail {
     private String senha = "jcrl lftn sbqk vpux";
 
     @Async
-    public void enviaremailHtml(String assunto, String menssagem, String emailDestino) throws MessagingException, UnsupportedEncodingException {
+    public void enviarEmailHtml(String assunto, String menssagem, String emailDestino) throws MessagingException, UnsupportedEncodingException {
         Properties properties = new Properties();
 
         properties.put("mail.smtp.ssl.trust", "*");

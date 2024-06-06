@@ -4,9 +4,11 @@ import jdev.mentoria.lojaVirtual.Loja_virtual.Model.CategoriaProduto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Repository
 public interface CategoriaProdutoRepository extends JpaRepository<CategoriaProduto, Long> {
 

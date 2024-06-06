@@ -5,10 +5,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
@@ -24,13 +25,13 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
     @Query(value = "select constraint_name from information_schema.constraint_column_usage where table_name = 'usuarios_acesso' and column_name = 'acesso_id' and constraint_name <> 'unique_acesso_user';", nativeQuery = true)
     String consultaConstraintAcesso();
 
-    @Transactional
+   // @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "insert into usuarios_acesso(usuario_id, acesso_id) values (?1, (select id from acesso where descricao = 'ROLE_USER'))")
     void insereAcessoUser(Long iduser);
 
 
-    @Transactional
+   // @Transactional
     @Modifying
     @Query(nativeQuery = true, value = "INSERT INTO usuarios_acesso (usuario_id, acesso_id)VALUES(?1, (SELECT id FROM acesso WHERE descricao = ?2 limit 1))")
     void insereAcessoUsuarioPJ(Long id,String acesso);

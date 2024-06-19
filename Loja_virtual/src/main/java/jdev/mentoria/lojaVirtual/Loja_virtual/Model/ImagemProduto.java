@@ -2,6 +2,7 @@ package jdev.mentoria.lojaVirtual.Loja_virtual.Model;
 
 //import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,12 +34,12 @@ public class ImagemProduto implements Serializable {
     @Column(columnDefinition = "text", nullable = false)
     private String imagemMiniatura;
 
-    @JsonIgnore
+    @JsonIgnoreProperties(allowGetters = true)
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
     private Produto produto;
 
-    @JsonIgnore
+    @JsonIgnoreProperties(allowGetters = true)
     @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;

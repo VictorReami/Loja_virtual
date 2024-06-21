@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -25,12 +26,14 @@ public class FormaPagamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_forma_pagamento")
     private Long id;
 
+    @NotNull(message = "Decrição deve ser informada")
     @Column(nullable = false)
     private String descricao;
 
-    @ManyToOne(targetEntity = Pessoa.class)
+    @NotNull(message = "A empresa deve ser informada")
+    @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-    private Pessoa empresa;
+    private PessoaJuridica empresa;
 
     @Override
     public boolean equals(Object o) {

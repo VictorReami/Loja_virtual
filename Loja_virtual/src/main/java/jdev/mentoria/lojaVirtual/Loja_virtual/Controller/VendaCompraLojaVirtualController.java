@@ -1,16 +1,11 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
 import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ItemVendaLojaDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.VendaCompraLojaVirtualDTO;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Endereco;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.ItemVendaLoja;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.VendaCompraLojaVirtual;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.EnderecoRepository;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.NotaFiscalVendaRepository;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaFisicaRepository;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.VendaCompraLojaVirtualRepository;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.*;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Service.VendaCompraLojaVirtualService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +19,20 @@ public class VendaCompraLojaVirtualController {
     private final VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
     private final EnderecoRepository enderecoRepository;
     private final PessoaFisicaRepository pessoaFisicaRepository;
-
     private final NotaFiscalVendaRepository notaFiscalVendaRepository;
-
     private final PessoaController pessoaController;
+    private final StatusRastreioRepository statusRastreioRepository;
 
-    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController) {
+    private final VendaCompraLojaVirtualService vendaCompraLojaVirtualService;
+
+    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, VendaCompraLojaVirtualService vendaCompraLojaVirtualService) {
         this.vendaCompraLojaVirtualRepository = vendaCompraLojaVirtualRepository;
         this.enderecoRepository = enderecoRepository;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
         this.notaFiscalVendaRepository = notaFiscalVendaRepository;
         this.pessoaController = pessoaController;
+        this.statusRastreioRepository = statusRastreioRepository;
+        this.vendaCompraLojaVirtualService = vendaCompraLojaVirtualService;
     }
 
     @ResponseBody
@@ -72,6 +70,16 @@ public class VendaCompraLojaVirtualController {
 
         /*Associa a venda gravada no banco com a nota fiscal*/
         vendaCompraLojaVirtual.getNotaFiscalVenda().setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+
+        StatusRastreio statusRastreio = new StatusRastreio();
+
+        statusRastreio.setCentroDestribuicao("Joja local");
+        statusRastreio.setCidade("Americana");
+        statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+        statusRastreio.setEstado("SP");
+        statusRastreio.setStatus("Inicio Compra");
+        statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+        statusRastreioRepository.save(statusRastreio);
 
         VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
 
@@ -124,6 +132,17 @@ public class VendaCompraLojaVirtualController {
         }
 
         return new ResponseEntity<VendaCompraLojaVirtualDTO>( vendaCompraLojaVirtualDTO, HttpStatus.OK);
+    }
+
+
+    @ResponseBody
+    @DeleteMapping(value = "/deleteCompraVendaLoja/{idVenda}")
+    public ResponseEntity<String> deleteCompraVendaLoja(@PathVariable("idVenda") Long idVenda){
+
+        vendaCompraLojaVirtualService.exclusaoTotalVendaBanco(idVenda);
+
+        return new ResponseEntity<String>("CompraVenda deletada com sucesso.", HttpStatus.OK);
+
     }
 
 }

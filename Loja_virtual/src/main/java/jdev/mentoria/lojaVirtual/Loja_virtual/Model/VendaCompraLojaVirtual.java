@@ -95,6 +95,8 @@ public class VendaCompraLojaVirtual implements Serializable {
     @OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ItemVendaLoja> itemVendaLoja = new ArrayList<ItemVendaLoja>();
 
+    private Boolean excluido = Boolean.FALSE;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

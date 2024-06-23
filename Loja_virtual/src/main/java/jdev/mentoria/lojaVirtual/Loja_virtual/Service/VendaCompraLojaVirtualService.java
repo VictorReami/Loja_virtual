@@ -13,16 +13,37 @@ public class VendaCompraLojaVirtualService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void exclusaoTotalVendaBanco(Long idVenda) {
+    public void exclusaoTotalCompraVendaBanco2(Long idVenda){
+        String value =  "BEGIN;" +
+                        "   UPDATE vd_cp_loja_virt set excluido = true" +
+                        "   WHERE id = " + idVenda + ";" +
+                        "   Commit;" +
+                        " END; ";
+        jdbcTemplate.execute(value);
+    }
+
+    public void ativaRegistroCompraVendaBanco(Long idVenda){
+        String value =  "BEGIN;" +
+                "   UPDATE vd_cp_loja_virt set excluido = false" +
+                "   WHERE id = " + idVenda + ";" +
+                "   Commit;" +
+                " END; ";
+        jdbcTemplate.execute(value);
+    }
+
+
+
+    public void exclusaoTotalCompraVendaBanco(Long idVenda) {
 
         String value =
-                " begin;"
+                " BEGIN;"
                         + " UPDATE nota_fiscal_venda set venda_compra_loja_virt_id = null where venda_compra_loja_virt_id = "+idVenda+"; "
                         + " delete from nota_fiscal_venda where venda_compra_loja_virt_id = "+idVenda+"; "
                         + " delete from item_venda_loja where venda_compra_loja_virt_id = "+idVenda+"; "
                         + " delete from status_rastreio where venda_compra_loja_virt_id = "+idVenda+"; "
                         + " delete from vd_cp_loja_virt where id = "+idVenda+"; "
-                        + " commit; ";
+                        + " commit; " +
+                " END;";
 
         jdbcTemplate.execute(value);
     }

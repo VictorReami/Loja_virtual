@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -268,7 +270,7 @@ public class VendaCompraLojaVirtualController {
     @ResponseBody
     @GetMapping(value = "/buscaCompraVendaDinamicaFaixaData/{data1}/{data2}")
     public ResponseEntity<List<VendaCompraLojaVirtualDTO>> buscaCompraVendaDinamicaFaixaData (@PathVariable("data1") String data1,
-                                                                                     @PathVariable("data2") String data2) throws ParseException {
+                                                                                              @PathVariable("data2") String data2) throws ParseException {
 
         List<VendaCompraLojaVirtual> vendaCompraLojaVirtual = null;
 

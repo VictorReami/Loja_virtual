@@ -1,11 +1,15 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.VendaCompraLojaVirtual;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.VendaCompraLojaVirtualRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.swing.text.html.parser.Entity;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -13,12 +17,14 @@ public class VendaCompraLojaVirtualService {
 
 
     private final JdbcTemplate jdbcTemplate;
-
     private final EntityManager entityManager;
 
-    public VendaCompraLojaVirtualService(JdbcTemplate jdbcTemplate, EntityManager entityManager) {
+    private final VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
+
+    public VendaCompraLojaVirtualService(JdbcTemplate jdbcTemplate, EntityManager entityManager, VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.entityManager = entityManager;
+        this.vendaCompraLojaVirtualRepository = vendaCompraLojaVirtualRepository;
     }
 
     public void exclusaoTotalCompraVendaBanco2(Long idVenda){
@@ -56,14 +62,21 @@ public class VendaCompraLojaVirtualService {
 
     /*HQL (Hibernate) ou JPQL (JPA ou Spring Data)*/
     @SuppressWarnings("unchecked")
-    public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2){
+    public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2) throws ParseException {
 
-        String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date date1 = dateFormat.parse(data1);
+        Date date2 = dateFormat.parse(data2);
+
+        return vendaCompraLojaVirtualRepository.consultaVendaFaixaData(date1, date2);
+
+        /*String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
                 + " where i.vendaCompraLojaVirtual.excluido = false "
                 + " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
                 + " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "'";
 
-        return entityManager.createQuery(sql).getResultList();
+        return entityManager.createQuery(sql).getResultList();*/
     }
 
 

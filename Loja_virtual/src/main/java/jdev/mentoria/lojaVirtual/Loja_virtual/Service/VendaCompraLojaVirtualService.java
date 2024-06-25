@@ -1,7 +1,12 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.VendaCompraLojaVirtual;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
+import javax.swing.text.html.parser.Entity;
+import java.util.List;
 
 @Service
 public class VendaCompraLojaVirtualService {
@@ -9,8 +14,11 @@ public class VendaCompraLojaVirtualService {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public VendaCompraLojaVirtualService(JdbcTemplate jdbcTemplate) {
+    private final EntityManager entityManager;
+
+    public VendaCompraLojaVirtualService(JdbcTemplate jdbcTemplate, EntityManager entityManager) {
         this.jdbcTemplate = jdbcTemplate;
+        this.entityManager = entityManager;
     }
 
     public void exclusaoTotalCompraVendaBanco2(Long idVenda){
@@ -31,8 +39,6 @@ public class VendaCompraLojaVirtualService {
         jdbcTemplate.execute(value);
     }
 
-
-
     public void exclusaoTotalCompraVendaBanco(Long idVenda) {
 
         String value =
@@ -46,6 +52,18 @@ public class VendaCompraLojaVirtualService {
                 " END;";
 
         jdbcTemplate.execute(value);
+    }
+
+    /*HQL (Hibernate) ou JPQL (JPA ou Spring Data)*/
+    @SuppressWarnings("unchecked")
+    public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2){
+
+        String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+                + " where i.vendaCompraLojaVirtual.excluido = false "
+                + " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
+                + " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "'";
+
+        return entityManager.createQuery(sql).getResultList();
     }
 
 

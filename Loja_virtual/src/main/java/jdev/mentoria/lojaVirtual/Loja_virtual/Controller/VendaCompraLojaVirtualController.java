@@ -215,6 +215,46 @@ public class VendaCompraLojaVirtualController {
     }
 
     @ResponseBody
+    @GetMapping(value = "/buscaCompraVendaPorCliente/{idCliente}")
+    public ResponseEntity<List<VendaCompraLojaVirtualDTO>> buscaCompraVendaPorCliente (@PathVariable("idCliente") Long idCliente){
+
+        List<VendaCompraLojaVirtual> vendaCompraLojaVirtual  = vendaCompraLojaVirtualRepository.vendaPorCliente(idCliente);
+
+        if(vendaCompraLojaVirtual == null){
+            vendaCompraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
+        }
+
+        List<VendaCompraLojaVirtualDTO> vendaCompraLojaVirtualDTOList = new ArrayList<VendaCompraLojaVirtualDTO>();
+
+        for (VendaCompraLojaVirtual vcl : vendaCompraLojaVirtual) {
+
+
+            VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+
+            vendaCompraLojaVirtualDTO.setId(vcl.getId());
+            vendaCompraLojaVirtualDTO.setValorTotal(vcl.getValorTotal());
+            vendaCompraLojaVirtualDTO.setPessoa(vcl.getPessoa());
+            vendaCompraLojaVirtualDTO.setEnderecoEntrega(vcl.getEnderecoEntrega());
+            vendaCompraLojaVirtualDTO.setEnderecoCobranca(vcl.getEnderecoCobranca());
+            vendaCompraLojaVirtualDTO.setValorDesconto(vcl.getValorDesconto());
+            vendaCompraLojaVirtualDTO.setValorFrete(vcl.getValorFrete());
+
+            for (ItemVendaLoja item : vcl.getItemVendaLoja()) {
+
+                ItemVendaLojaDTO itemVendaLojaDTO = new ItemVendaLojaDTO();
+
+                itemVendaLojaDTO.setProduto(item.getProduto());
+                itemVendaLojaDTO.setQuantidade(item.getQuantidade());
+
+                vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaLojaDTO);
+            }
+            vendaCompraLojaVirtualDTOList.add(vendaCompraLojaVirtualDTO);
+        }
+
+        return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>( vendaCompraLojaVirtualDTOList, HttpStatus.OK);
+    }
+
+    @ResponseBody
     @GetMapping(value = "/buscaCompraVendaDinamica/{valor}/{tipoConsulta}")
     public ResponseEntity<List<VendaCompraLojaVirtualDTO>> buscaCompraVendaDinamica (@PathVariable("valor") String valor,
                                                                                      @PathVariable("tipoConsulta") String tipoConsulta){

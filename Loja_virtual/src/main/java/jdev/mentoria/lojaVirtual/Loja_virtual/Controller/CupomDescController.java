@@ -1,14 +1,13 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Acesso;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.CupomDesc;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.CupomDescRepository;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,6 +19,36 @@ public class CupomDescController {
         this.cupomDescRepository = cupomDescRepository;
     }
 
+    @ResponseBody
+    @PostMapping("/salvarCupomDesc")
+    public ResponseEntity<CupomDesc> salvarCupomDesc(@RequestBody CupomDesc cupomDesc) throws ExceptionMentoriaJava {
+
+        CupomDesc CupomDescSalvo = this.cupomDescRepository.save(cupomDesc);
+
+        return new ResponseEntity<CupomDesc>(CupomDescSalvo, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @DeleteMapping(value = "/deleteCupomDescPorId/{id}")
+    public ResponseEntity<?> deleteCupomDescPorId(@PathVariable("id") Long id) {
+
+        cupomDescRepository.deleteById(id);
+
+        return new ResponseEntity("Cupom desconto Removido.",HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/obterCupomDesc/{id}")
+    public ResponseEntity<CupomDesc> obterCupomDesc(@PathVariable("id") Long id) throws ExceptionMentoriaJava {
+
+        CupomDesc cupomDesc = cupomDescRepository.findById(id).orElse(null);
+
+        if(cupomDesc == null){
+            throw new ExceptionMentoriaJava("Não encontrou o cupom desconto com o código: " + id);
+        }
+
+        return new ResponseEntity<CupomDesc>(cupomDesc,HttpStatus.OK);
+    }
 
     @ResponseBody
     @GetMapping(value = "/cupomDescontoList")

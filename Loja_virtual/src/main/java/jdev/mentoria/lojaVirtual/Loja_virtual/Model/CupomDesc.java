@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class CupomDesc implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_cupom_desc")
     private Long id;
 
+    @NotEmpty(message = "Informe o codigo desconte.")
     @Column(nullable = false)
     private String codigoDesc;
 
@@ -33,6 +35,7 @@ public class CupomDesc implements Serializable {
 
     private BigDecimal valorPorcentDesc;
 
+    @NotEmpty(message = "Informe a data de validade do cupom.")
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dataValidadeCupom;

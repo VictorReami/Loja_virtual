@@ -1,20 +1,25 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.StatusContaReceber;
 import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ItemVendaLojaDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.VendaCompraLojaVirtualDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.*;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Service.ServiceSendEmail;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.VendaCompraLojaVirtualService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -27,10 +32,11 @@ public class VendaCompraLojaVirtualController {
     private final NotaFiscalVendaRepository notaFiscalVendaRepository;
     private final PessoaController pessoaController;
     private final StatusRastreioRepository statusRastreioRepository;
-
     private final VendaCompraLojaVirtualService vendaCompraLojaVirtualService;
+    private final ContaReceberRepository contaReceberRepository;
+    private final ServiceSendEmail serviceSendEmail;
 
-    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, VendaCompraLojaVirtualService vendaCompraLojaVirtualService) {
+    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, VendaCompraLojaVirtualService vendaCompraLojaVirtualService, ContaReceberRepository contaReceberRepository, ServiceSendEmail serviceSendEmail) {
         this.vendaCompraLojaVirtualRepository = vendaCompraLojaVirtualRepository;
         this.enderecoRepository = enderecoRepository;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
@@ -38,11 +44,13 @@ public class VendaCompraLojaVirtualController {
         this.pessoaController = pessoaController;
         this.statusRastreioRepository = statusRastreioRepository;
         this.vendaCompraLojaVirtualService = vendaCompraLojaVirtualService;
+        this.contaReceberRepository = contaReceberRepository;
+        this.serviceSendEmail = serviceSendEmail;
     }
 
     @ResponseBody
     @PostMapping(value = "/salvarCompraVendaLoja")
-    public ResponseEntity<VendaCompraLojaVirtualDTO> salvarCompraVendaLoja(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionMentoriaJava {
+    public ResponseEntity<VendaCompraLojaVirtualDTO> salvarCompraVendaLoja(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionMentoriaJava, MessagingException, UnsupportedEncodingException {
 
         vendaCompraLojaVirtual.getPessoa().setEmpresa(vendaCompraLojaVirtual.getEmpresa());
         PessoaFisica pessoaFisica = pessoaController.salvarCpf(vendaCompraLojaVirtual.getPessoa()).getBody();
@@ -105,6 +113,30 @@ public class VendaCompraLojaVirtualController {
 
             vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaLojaDTO);
         }
+
+        ContaReceber contaReceber = new ContaReceber();
+        contaReceber.setDescricao("Venda da loja virtual nº: " + vendaCompraLojaVirtual.getId());
+        contaReceber.setDtPagamento(Calendar.getInstance().getTime());
+        contaReceber.setDtVencimento(Calendar.getInstance().getTime());
+        contaReceber.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+        contaReceber.setPessoa(vendaCompraLojaVirtual.getPessoa());
+        contaReceber.setStatus(StatusContaReceber.QUITADA);
+        contaReceber.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+        contaReceber.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+        contaReceberRepository.save(contaReceber);
+
+        /*Emil para o comprador*/
+        StringBuilder msgemail = new StringBuilder();
+        msgemail.append("Olá, ").append(pessoaFisica.getNome()).append("</br>");
+        msgemail.append("Você realizou a compra de nº: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
+        msgemail.append("Na loja ").append(vendaCompraLojaVirtual.getEmpresa().getNomeFantasia());
+        /*assunto, msg, destino*/
+        serviceSendEmail.enviarEmailHtml("Compra Realizada", msgemail.toString(), pessoaFisica.getEmail());
+
+        /*Email para o vendedor*/
+        msgemail = new StringBuilder();
+        msgemail.append("Você realizou uma venda, nº " ).append(vendaCompraLojaVirtual.getId());
+        serviceSendEmail.enviarEmailHtml("Venda Realizada", msgemail.toString(), vendaCompraLojaVirtual.getEmpresa().getEmail());
 
         return new ResponseEntity<VendaCompraLojaVirtualDTO>( vendaCompraLojaVirtualDTO, HttpStatus.OK);
 

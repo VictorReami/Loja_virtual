@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ public class CupomDescController {
 
     @ResponseBody
     @PostMapping("/salvarCupomDesc")
-    public ResponseEntity<CupomDesc> salvarCupomDesc(@RequestBody CupomDesc cupomDesc) throws ExceptionMentoriaJava {
+    public ResponseEntity<CupomDesc> salvarCupomDesc(@RequestBody @Valid CupomDesc cupomDesc) throws ExceptionMentoriaJava {
 
         CupomDesc CupomDescSalvo = this.cupomDescRepository.save(cupomDesc);
 
@@ -30,7 +31,7 @@ public class CupomDescController {
 
     @ResponseBody
     @DeleteMapping(value = "/deleteCupomDescPorId/{id}")
-    public ResponseEntity<?> deleteCupomDescPorId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteCupomDescPorId(@PathVariable("id")  Long id) {
 
         cupomDescRepository.deleteById(id);
 

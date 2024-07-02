@@ -2,6 +2,7 @@ package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
 import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.NotaFiscalCompraRelatorioDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.MarcaProduto;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.NotaFiscalCompra;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.NotaFiscalCompraRepository;
@@ -37,6 +38,18 @@ public class NotaFiscalCompraController {
 
 
         return new ResponseEntity<List<NotaFiscalCompraRelatorioDTO>>(notaFiscalCompraRelatorioDTOList, HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO")
+    public ResponseEntity<List<NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO>> relatorioNotaFiscalCompraProduto(@RequestBody @Valid NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO notaFiscalCompraRelatorioProdutoAlertaEstoqueDTO){
+
+        List<NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO> notaFiscalCompraRelatorioProdutoAlertaEstoqueDTOList = new ArrayList<NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO>();
+
+        notaFiscalCompraRelatorioProdutoAlertaEstoqueDTOList = notaFiscalCompraService.gerarRelatorioAlertaEstoque(notaFiscalCompraRelatorioProdutoAlertaEstoqueDTO);
+
+
+        return new ResponseEntity<List<NotaFiscalCompraRelatorioProdutoAlertaEstoqueDTO>>(notaFiscalCompraRelatorioProdutoAlertaEstoqueDTOList, HttpStatus.OK);
     }
 
     @ResponseBody

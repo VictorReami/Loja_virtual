@@ -3,6 +3,7 @@ package jdev.mentoria.lojaVirtual.Loja_virtual.Model;
 //import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.StatusVendaLojaVirtual;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -91,6 +92,11 @@ public class VendaCompraLojaVirtual implements Serializable {
     @ManyToOne(targetEntity = PessoaJuridica.class)
     @JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private PessoaJuridica empresa;
+
+    @Column(nullable = false)
+    @NotNull(message = "Status da venda deve ser informada.")
+    @Enumerated(EnumType.STRING)
+    private StatusVendaLojaVirtual statusVendaLojaVirtual;
 
     @OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ItemVendaLoja> itemVendaLoja = new ArrayList<ItemVendaLoja>();

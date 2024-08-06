@@ -5,7 +5,7 @@ import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.TipoEndereco;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Endereco;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaRepository;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.PessoaFisicaRepository;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.PessoaUsuarioService;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;

@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
-    @Query(value = "SELECT u FROM Usuario u WHERE u.dataAtualSenha <= current_date - 90")
+    @Query(value = "SELECT u FROM Usuario u WHERE u.dataAtualSenha <= current_date - 900000") //alterardo a quantidade de dias para não ficar enviadno E-mail toda hora
     List<Usuario> usuarioSenhvencida();
 
     @Query(value = "select u from Usuario u where u.login = ?1")

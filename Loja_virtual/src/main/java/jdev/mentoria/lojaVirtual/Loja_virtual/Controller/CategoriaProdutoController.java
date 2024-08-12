@@ -1,9 +1,8 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
-
-import Model.DTO.CategoriaProdutoDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.CategoriaProduto;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.CategoriaProdutoDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.CategoriaProdutoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

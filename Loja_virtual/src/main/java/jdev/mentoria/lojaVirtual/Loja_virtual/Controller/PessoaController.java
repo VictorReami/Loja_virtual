@@ -1,9 +1,9 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
-import Model.DTO.CepDTO;
-import Model.DTO.ConsultaCnpjDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.TipoPessoa;
 import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.CepDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ConsultaCnpjDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Endereco;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;

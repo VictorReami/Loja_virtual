@@ -1,7 +1,8 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 
-import Model.DTO.CepDTO;
-import Model.DTO.ConsultaCnpjDTO;
+
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.CepDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ConsultaCnpjDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaFisica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.PessoaJuridica;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.Usuario;

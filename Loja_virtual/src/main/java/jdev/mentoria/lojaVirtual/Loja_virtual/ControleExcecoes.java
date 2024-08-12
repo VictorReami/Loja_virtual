@@ -1,6 +1,6 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual;
 
-import Model.DTO.ObjetoErroDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ObjetoErroDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.ServiceSendEmail;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.coyote.Response;

@@ -1,6 +1,6 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
-import Model.DTO.ImagemProdutoDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ImagemProdutoDTO;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.ImagemProduto;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.ImagemProdutoRepository;
 import org.springframework.http.HttpStatus;

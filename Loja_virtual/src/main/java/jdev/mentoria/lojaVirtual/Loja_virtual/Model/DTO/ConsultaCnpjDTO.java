@@ -1,4 +1,4 @@
-package Model.DTO;
+package jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

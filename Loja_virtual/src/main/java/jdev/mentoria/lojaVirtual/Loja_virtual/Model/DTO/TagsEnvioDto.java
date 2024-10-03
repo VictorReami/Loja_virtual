@@ -7,9 +7,10 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class FromDTO implements Serializable {
+public class TagsEnvioDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String tag;
+    private String url;
 
-    private String postal_code;
 }

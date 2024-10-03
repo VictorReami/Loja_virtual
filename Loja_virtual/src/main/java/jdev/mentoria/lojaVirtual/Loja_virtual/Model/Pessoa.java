@@ -2,6 +2,7 @@ package jdev.mentoria.lojaVirtual.Loja_virtual.Model;
 
 //import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.TipoEndereco;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,20 @@ public abstract class Pessoa implements Serializable {
     @ManyToOne(targetEntity = Pessoa.class)
     @JoinColumn(name = "empresa_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
     private Pessoa empresa;
+
+    public Endereco enderecoEntrega(){
+
+        Endereco enderecoReturn = null;
+
+        for(Endereco e : enderecos){
+            if(e.getTipoEndereco().name().equals(TipoEndereco.ENTREGA.name())){
+                enderecoReturn = e;
+                break;
+            }
+        }
+
+        return enderecoReturn;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -103,6 +103,15 @@ public class VendaCompraLojaVirtual implements Serializable {
 
     private Boolean excluido = Boolean.FALSE;
 
+    @Column(name = "codigo_etiqueta")
+    private String codigoEtiqueta;
+
+    @Column(name = "url_imprime_etiqueta")
+    private String UrlImprimeEtiqueta;
+
+    /*Frete que foi escolhido pelo cliente no momento da Compra*/
+    private String ServicoTransportadora;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

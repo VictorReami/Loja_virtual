@@ -7,9 +7,9 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class FromDTO implements Serializable {
+public class InvoiceEnvioDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String key;
 
-    private String postal_code;
 }

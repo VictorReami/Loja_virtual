@@ -7,9 +7,12 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class FromDTO implements Serializable {
+public class VolumesEnvioEtiquetaDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String height;
+    private String width;
+    private String length;
+    private String weight;
 
-    private String postal_code;
 }

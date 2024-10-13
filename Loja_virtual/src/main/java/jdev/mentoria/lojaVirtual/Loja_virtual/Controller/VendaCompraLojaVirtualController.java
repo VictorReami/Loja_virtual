@@ -10,10 +10,12 @@ import jdev.mentoria.lojaVirtual.Loja_virtual.Model.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.ServiceSendEmail;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Service.StatusRastreioService;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.VendaCompraLojaVirtualService;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,17 +36,19 @@ public class VendaCompraLojaVirtualController {
     private final NotaFiscalVendaRepository notaFiscalVendaRepository;
     private final PessoaController pessoaController;
     private final StatusRastreioRepository statusRastreioRepository;
+    private final StatusRastreioService statusRastreioService;
     private final VendaCompraLojaVirtualService vendaCompraLojaVirtualService;
     private final ContaReceberRepository contaReceberRepository;
     private final ServiceSendEmail serviceSendEmail;
 
-    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, VendaCompraLojaVirtualService vendaCompraLojaVirtualService, ContaReceberRepository contaReceberRepository, ServiceSendEmail serviceSendEmail) {
+    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, StatusRastreioService statusRastreioService, VendaCompraLojaVirtualService vendaCompraLojaVirtualService, ContaReceberRepository contaReceberRepository, ServiceSendEmail serviceSendEmail) {
         this.vendaCompraLojaVirtualRepository = vendaCompraLojaVirtualRepository;
         this.enderecoRepository = enderecoRepository;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
         this.notaFiscalVendaRepository = notaFiscalVendaRepository;
         this.pessoaController = pessoaController;
         this.statusRastreioRepository = statusRastreioRepository;
+        this.statusRastreioService = statusRastreioService;
         this.vendaCompraLojaVirtualService = vendaCompraLojaVirtualService;
         this.contaReceberRepository = contaReceberRepository;
         this.serviceSendEmail = serviceSendEmail;
@@ -110,13 +114,13 @@ public class VendaCompraLojaVirtualController {
 
         StatusRastreio statusRastreio = new StatusRastreio();
 
-        statusRastreio.setCentroDestribuicao("Joja local");
+       /* statusRastreio.setCentroDestribuicao("Joja local");
         statusRastreio.setCidade("Americana");
         statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
         statusRastreio.setEstado("SP");
         statusRastreio.setStatus("Inicio Compra");
         statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
-        statusRastreioRepository.save(statusRastreio);
+        statusRastreioRepository.save(statusRastreio);*/
 
         VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
 
@@ -465,7 +469,7 @@ public class VendaCompraLojaVirtualController {
 
     @ResponseBody
     @GetMapping(value = "/imprimeCompraEtiquetaFrete/{idVenda}")
-    public ResponseEntity<String> imprimeCompraEtiquetaFrete(@PathVariable long idVenda) throws ExceptionMentoriaJava, IOException {
+    public ResponseEntity<String> imprimeCompraEtiquetaFrete(@PathVariable Long idVenda) throws ExceptionMentoriaJava, IOException {
 
         VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.findById(idVenda).orElseGet(null);
 
@@ -652,6 +656,50 @@ public class VendaCompraLojaVirtualController {
         String urlEtiqueta = responseIm.body().string();
 
         vendaCompraLojaVirtualRepository.updateURLEtiqueta(urlEtiqueta, vendaCompraLojaVirtual.getId());
+
+        OkHttpClient clientRastreio = new OkHttpClient().newBuilder().build();
+        okhttp3.MediaType mediaTypeR = okhttp3.MediaType.parse("application/json");
+        okhttp3.RequestBody bodyR = okhttp3.RequestBody.create(mediaTypeR, "{\n    \"orders\": [\n        \""+idEtiqueta+"\"\n    ]\n}");
+        okhttp3.Request requestR = new Request.Builder()
+                .url(ApiTokenIntegracao.URL_MELHOR_ENVIO_SAND_BOX+ "api/v2/me/shipment/tracking")
+                .method("POST", bodyR)
+                .addHeader("Accept", "application/json")
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " +  ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+                .addHeader("User-Agent", "suporte@jdevtreinamento.com.br").build();
+
+        Response responseR = clientRastreio.newCall(requestR).execute();
+
+        JsonNode jsonNodeR = new ObjectMapper().readTree(responseR.body().string());
+
+        Iterator<JsonNode> iteratorR = jsonNodeR.iterator();
+
+        String idEtiquetaR = "";
+
+        while(iteratorR.hasNext()) {
+            JsonNode node = iteratorR.next();
+            if (node.get("tracking") != null) {
+                idEtiquetaR = node.get("tracking").asText();
+            }else {
+                idEtiquetaR = node.asText();
+            }
+            break;
+        }
+
+        List<StatusRastreio> rastreios =	statusRastreioRepository.listaRastreiovenda(idVenda);
+
+        if (rastreios.isEmpty()) {
+
+            StatusRastreio rastreio = new StatusRastreio();
+            rastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+            rastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+            rastreio.setUrlRastreio("https://www.melhorrastreio.com.br/rastreio/" + idEtiquetaR);
+
+            statusRastreioRepository.save(rastreio);
+        }else {
+
+            statusRastreioService.salvaUrlRastreio("https://www.melhorrastreio.com.br/rastreio/" + idEtiquetaR, idVenda);
+        }
 
         return new ResponseEntity<>("sucesso", HttpStatus.OK);
 

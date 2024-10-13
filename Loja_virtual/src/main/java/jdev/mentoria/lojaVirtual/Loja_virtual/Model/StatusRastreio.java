@@ -26,13 +26,7 @@ public class StatusRastreio implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_status_rastreio")
     private Long id;
 
-    private String centroDestribuicao;
-
-    private String cidade;
-
-    private String estado;
-
-    private String status;
+    private String urlRastreio;
 
     @JsonIgnore
     @ManyToOne

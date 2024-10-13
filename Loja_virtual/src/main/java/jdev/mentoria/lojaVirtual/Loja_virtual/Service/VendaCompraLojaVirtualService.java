@@ -78,6 +78,9 @@ public class VendaCompraLojaVirtualService {
 
         return entityManager.createQuery(sql).getResultList();*/
     }
+   // void salvaUrlRastreio(String urlRastreio, Long idVenda);
+
+
 
 
 

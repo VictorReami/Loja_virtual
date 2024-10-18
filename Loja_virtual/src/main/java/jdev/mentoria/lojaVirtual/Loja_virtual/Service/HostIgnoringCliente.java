@@ -20,13 +20,13 @@ import java.util.Set;
 public class HostIgnoringCliente implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private  String hostName;
+    private String hostName;
 
-     public HostIgnoringCliente() {
+    public HostIgnoringCliente(String hostName) {
         this.hostName = hostName;
     }
 
-   /* public HostIgnoringCliente(String hostName) {
+   /*public HostIgnoringCliente(String hostName) {
         this.hostName = hostName;
     }*/
 

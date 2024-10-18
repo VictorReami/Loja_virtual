@@ -16,19 +16,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Service
 public class HostIgnoringCliente implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String hostName;
 
+
     public HostIgnoringCliente(String hostName) {
         this.hostName = hostName;
     }
-
-   /*public HostIgnoringCliente(String hostName) {
-        this.hostName = hostName;
-    }*/
 
     public Client hostIgnoringCliente() throws Exception {
         TrustManager[] trustManagers = new TrustManager[] {

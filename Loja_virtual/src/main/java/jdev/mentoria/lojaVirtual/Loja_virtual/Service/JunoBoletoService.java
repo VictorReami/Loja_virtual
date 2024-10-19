@@ -3,6 +3,7 @@ package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.ApiTokenIntegracao;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.AccessTokenJunoAPI;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.AccessTokenJunoRepository;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,31 @@ public class JunoBoletoService implements Serializable {
     public JunoBoletoService(AccessTokenJunoService accessTokenJunoService, AccessTokenJunoRepository accessTokenJunoRepository) {
         this.accessTokenJunoService = accessTokenJunoService;
         this.accessTokenJunoRepository = accessTokenJunoRepository;
+    }
+
+
+    public String geraChaveBoletoPix() throws Exception {
+        AccessTokenJunoAPI accessTokenJunoAPI = this.obterTokenJunoAPI();
+
+        Client client = new HostIgnoringCliente("https://api.juno.com.br/").hostIgnoringCliente();
+        WebResource webResource = client.resource("https://api.juno.com.br/pix/keys");
+        //WebResource webResource = client.resource("https://api.juno.com.br/api-integration/pix/keys");
+
+
+        ClientResponse clientResponse = webResource
+                .accept("application/json;charset=UTF-8")
+                .header("Content-Type", "application/json")
+                .header("X-API-Version", 2)
+                .header("X-Resource-Token", ApiTokenIntegracao.TOKEN_PRIVATE_JUNO)
+                .header("Authorization", "Bearer " + accessTokenJunoAPI.getAccess_token())
+                .post(ClientResponse.class, "{ \"type\": \"RANDOM_KEY\" }");
+
+        //.header("X-Idempotency-Key", "chave-boleto-pix")
+        return clientResponse.getEntity(String.class);
+
+
+
+
     }
 
     public AccessTokenJunoAPI obterTokenJunoAPI() throws Exception {

@@ -23,6 +23,7 @@ public class ConteudoBoletoJunoDTO implements Serializable {
     private String payNumber;
     private String amount;
     private String status;
+    private String checkoutUrl;
 
     private BilletDetailsDTO billetDetails = new BilletDetailsDTO();
 

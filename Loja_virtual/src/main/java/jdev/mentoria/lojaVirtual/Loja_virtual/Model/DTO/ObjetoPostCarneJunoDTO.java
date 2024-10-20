@@ -31,5 +31,11 @@ public class ObjetoPostCarneJunoDTO implements Serializable {
 
     private Integer recurrency = 0;
 
+    private String payerCpfCnpj;
+
+    private String payerEmail;
+
+    private Long idVenda;
+
 
 }

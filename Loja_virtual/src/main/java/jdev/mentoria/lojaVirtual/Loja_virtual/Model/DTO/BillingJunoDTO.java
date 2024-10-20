@@ -11,7 +11,7 @@ public class BillingJunoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String nome;
+    private String name;
     private String document;
     private String email;
     private String phone;

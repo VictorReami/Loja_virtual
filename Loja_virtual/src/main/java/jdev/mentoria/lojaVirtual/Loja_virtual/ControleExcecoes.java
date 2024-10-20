@@ -69,7 +69,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
         ex.printStackTrace();
 
         try {
-            serviceSendEmail.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "mestrezeh@gmail.com");
+            serviceSendEmail.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "lojavirtualdev@gmail.com");
         } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -100,7 +100,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
         ex.printStackTrace();
 
         try {
-            serviceSendEmail.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "mestrezeh@gmail.com");
+            serviceSendEmail.enviarEmailHtml("Erro na loja virtual", ExceptionUtils.getStackTrace(ex), "lojavirtualdev@gmail.com");
         } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }

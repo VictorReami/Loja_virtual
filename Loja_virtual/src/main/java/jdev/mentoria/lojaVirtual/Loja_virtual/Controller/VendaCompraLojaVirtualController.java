@@ -582,7 +582,7 @@ public class VendaCompraLojaVirtualController {
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
-                .addHeader("User-Agent", "mestrezeh@gmail.com.br")
+                .addHeader("User-Agent", "lojavirtualdev@gmail.com")
                 .build();
 
         okhttp3.Response response = client.newCall(request).execute();
@@ -621,7 +621,7 @@ public class VendaCompraLojaVirtualController {
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
-                .addHeader("User-Agent", "mestrezeh@gmail.com.br")
+                .addHeader("User-Agent", "lojavirtualdev@gmail.com")
                 .build();
 
         okhttp3.Response responseC = clientCompra.newCall(requestC).execute();
@@ -639,7 +639,7 @@ public class VendaCompraLojaVirtualController {
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " +  ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
-                .addHeader("User-Agent", "mestrezeh@gmail.com.br")
+                .addHeader("User-Agent", "lojavirtualdev@gmail.com")
                 .build();
 
         okhttp3.Response responseGe = clientGe.newCall(requestGe).execute();
@@ -659,7 +659,7 @@ public class VendaCompraLojaVirtualController {
                 .addHeader("Accept", "application/json")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
-                .addHeader("User-Agent", "mestrezeh@gmail.com.br")
+                .addHeader("User-Agent", "lojavirtualdev@gmail.com")
                 .build();
 
         okhttp3.Response responseIm = clientIm.newCall(requestIm).execute();

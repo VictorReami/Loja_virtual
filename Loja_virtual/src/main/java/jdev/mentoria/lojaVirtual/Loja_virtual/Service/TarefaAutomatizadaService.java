@@ -22,7 +22,7 @@ public class TarefaAutomatizadaService {
     }
 
 
-    //Os Parametros do tipi CROON são: Segundo, Minuto, Hora, Dia do mês, Mês, Dia da semana
+    //Os Parametros do tipo CRON são: Segundo, Minuto, Hora, Dia do mês, Mês, Dia da semana
     //@Scheduled(cron = "0 0 11 * * *", zone = "America/Sao_Paulo") /* Vai rodar todos os dias as 11horas da manhã no horario de são paulo */
      @Scheduled(initialDelay = 2000, fixedDelay = 8640000) /*Será executado a cada 24 horas */ //86400000
     public void notificarUsuarioTrocarSenha() throws MessagingException, UnsupportedEncodingException, InterruptedException {

@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 @Getter
 @Setter
-public class RelatorioStatusCompra {
+public class RelatorioStatusCompra implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

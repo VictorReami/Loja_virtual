@@ -9,6 +9,7 @@ import jdev.mentoria.lojaVirtual.Loja_virtual.ExceptionMentoriaJava;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.*;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Service.JunoBoletoService;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.ServiceSendEmail;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.StatusRastreioService;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Service.VendaCompraLojaVirtualService;
@@ -40,8 +41,9 @@ public class VendaCompraLojaVirtualController {
     private final VendaCompraLojaVirtualService vendaCompraLojaVirtualService;
     private final ContaReceberRepository contaReceberRepository;
     private final ServiceSendEmail serviceSendEmail;
+    private final JunoBoletoService junoBoletoService;
 
-    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, StatusRastreioService statusRastreioService, VendaCompraLojaVirtualService vendaCompraLojaVirtualService, ContaReceberRepository contaReceberRepository, ServiceSendEmail serviceSendEmail) {
+    public VendaCompraLojaVirtualController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, EnderecoRepository enderecoRepository, PessoaFisicaRepository pessoaFisicaRepository, NotaFiscalVendaRepository notaFiscalVendaRepository, PessoaController pessoaController, StatusRastreioRepository statusRastreioRepository, StatusRastreioService statusRastreioService, VendaCompraLojaVirtualService vendaCompraLojaVirtualService, ContaReceberRepository contaReceberRepository, ServiceSendEmail serviceSendEmail, JunoBoletoService junoBoletoService) {
         this.vendaCompraLojaVirtualRepository = vendaCompraLojaVirtualRepository;
         this.enderecoRepository = enderecoRepository;
         this.pessoaFisicaRepository = pessoaFisicaRepository;
@@ -52,6 +54,20 @@ public class VendaCompraLojaVirtualController {
         this.vendaCompraLojaVirtualService = vendaCompraLojaVirtualService;
         this.contaReceberRepository = contaReceberRepository;
         this.serviceSendEmail = serviceSendEmail;
+        this.junoBoletoService = junoBoletoService;
+    }
+
+
+    @ResponseBody
+    @PostMapping(value = "/gerarBoletoPix")
+    public ResponseEntity<String> gerarBoletoPix(@RequestBody @Valid ObjetoPostCarneJunoDTO objetoPostCarneJunoDTO) throws Exception {
+        return new ResponseEntity<String>(junoBoletoService.gerarCarneApi(objetoPostCarneJunoDTO), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/cancelarBoletoPix")
+    public ResponseEntity<String> cancelarBoletoPix(@RequestBody @Valid String code) throws Exception {
+        return new ResponseEntity<String>(junoBoletoService.cancelarBoleto(code), HttpStatus.OK);
     }
 
     @ResponseBody

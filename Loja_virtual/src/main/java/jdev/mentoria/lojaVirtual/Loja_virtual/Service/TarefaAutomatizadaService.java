@@ -33,7 +33,7 @@ public class TarefaAutomatizadaService {
 
              StringBuilder msg = new StringBuilder();
              msg.append("olá, ").append(usuario.getPessoa().getNome()).append("</br>");
-             msg.append("Está na gora de trocar sua senha, já passou 90 dias de validade.").append("<br/>");
+             msg.append("Está na hora de trocar sua senha, já passou 90 dias de validade.").append("<br/>");
              msg.append("Troque sua senha da loja virtual do Victor - JDEV treinamentos");
 
              serviceSendEmail.enviarEmailHtml("Troca de senha", msg.toString(), usuario.getLogin());

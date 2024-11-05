@@ -35,6 +35,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .disable().authorizeRequests().antMatchers("/").permitAll()
                 .antMatchers("/index").permitAll()
+                .antMatchers(HttpMethod.POST, "/requisicaoJunoBoleto/**", "/notificacaoPagamentoJunoApiV2/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/requisicaoJunoBoleto/**", "/notificacaoPagamentoJunoApiV2/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 /* redireciona ou da um retorno para index quando desloga*/
@@ -59,13 +61,12 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 
     }
 
-
-
     /*Ignora alguas URL livre de autenticação*/
     @Override
     public void configure(WebSecurity web) throws Exception {
-        //web.ignoring().antMatchers(HttpMethod.GET, "/salvarAcesso", "/deleteAcesso")
-        //.antMatchers(HttpMethod.POST, "/salvarAcesso", "/deleteAcesso");
+        web.ignoring()
+                .antMatchers(HttpMethod.GET, "/requisicaoJunoBoleto/**", "/notificacaoPagamentoJunoApiV2/**")
+                .antMatchers(HttpMethod.POST, "/requisicaoJunoBoleto/**", "/notificacaoPagamentoJunoApiV2/**");
         /*Ingnorando URL no momento para nao autenticar*/
     }
 

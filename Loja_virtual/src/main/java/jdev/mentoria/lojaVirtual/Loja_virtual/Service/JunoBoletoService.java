@@ -9,10 +9,7 @@ import com.sun.jersey.api.client.WebResource;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Enums.ApiTokenIntegracao;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.AccessTokenJunoAPI;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.BoletoJuno;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.BoletoGeradoApiJunoDTO;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.CobrancaJunoApiDTO;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ConteudoBoletoJunoDTO;
-import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ObjetoPostCarneJunoDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.*;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.VendaCompraLojaVirtual;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.AccessTokenJunoRepository;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.BoletoJunoRepository;
@@ -165,7 +162,7 @@ public class JunoBoletoService implements Serializable {
     }
 
 
-    public String geraChaveBoletoPix() throws Exception {
+    public String gerarChaveBoletoPix() throws Exception {
         AccessTokenJunoAPI accessTokenJunoAPI = this.obterTokenJunoAPI();
 
         Client client = new HostIgnoringCliente("https://api.juno.com.br/").hostIgnoringCliente();
@@ -225,5 +222,30 @@ public class JunoBoletoService implements Serializable {
         }else{
             return accessTokenJunoAPI;
         }
+    }
+
+    public String criarWebhook(CriarWebHook criarWebHook) throws Exception {
+
+        AccessTokenJunoAPI accessTokenJunoAPI = obterTokenJunoAPI();
+
+        Client client = new HostIgnoringCliente("https://api.juno.com.br/").hostIgnoringCliente();
+        WebResource webResource = client.resource("https://api.juno.com.br/pix/keys");
+
+        String json = new ObjectMapper().writeValueAsString(criarWebHook);
+
+        ClientResponse clientResponse = webResource
+                .accept("application/json;charset=UTF-8")
+                .header("Content-Type", "application/json")
+                .header("X-API-Version", 2)
+                .header("X-Resource-Token", ApiTokenIntegracao.TOKEN_PRIVATE_JUNO)
+                .header("Authorization", "Bearer " + accessTokenJunoAPI.getAccess_token())
+                .post(ClientResponse.class, "{ \"type\": \"RANDOM_KEY\" }");
+
+        String resposta = clientResponse.getEntity(String.class);
+        clientResponse.close();
+
+        return resposta;
+
+
     }
 }

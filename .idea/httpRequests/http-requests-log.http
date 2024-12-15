@@ -1,0 +1,10 @@
+GET http://localhost:8080/loja_virtual_mentoria/pagamento/idVendaCompra
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.2.3
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+content-length: 0
+
+<> 2024-12-15T085444.200.html
+
+###
+

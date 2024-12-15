@@ -38,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="form-row" id="divLinhaCartao">
+            <div class="form-row" id="divLinha1Cartao">
                 <div class="form-group col-md-6">
                     <label for="numeroCartao">Número do cartão</label>
                     <input type="text" class="form-control" id="numeroCartao" required="required" style="height: 40px">
@@ -51,14 +51,79 @@
             </div>
 
             <div class="form-row" id="divCPF">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="cpf">CPF: </label>
                     <input type="text" placeholder="000.000.000-00" class="form-control" id="cpf" required="required" style="height: 40px"></input>
                 </div>
             </div>
 
+            <div class="form-row" id="divLinha2Cartao">
+                <div class="form-group col-md-3" id="divMesValidade">
+                    <label for="mesvalidade" id="labelMesValidade">Mês de validade</label>
+                    <select class="form-control" required="required" id="selectMesValidade" style="height: 40px">
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                </div>
 
-            
+                <div class="form-group col-md-3" id="divAnoValidade">
+                    <label for="anoValidade">Ano de validade</label>
+                    <select class="form-control" required="required" id="selectAnoValidade" style="height: 40px">
+                        <option value="2024">24</option>
+                        <option value="2025">25</option>
+                        <option value="2026">26</option>
+                        <option value="2027">27</option>
+                        <option value="2028">28</option>
+                        <option value="2029">29</option>
+                        <option value="2030">30</option>
+                        <option value="2031">31</option>
+                        <option value="2032">32</option>
+                        <option value="2033">33</option>
+                        <option value="2034">34</option>
+                        <option value="2035">35</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4" id="divCVV">
+                    <label for="cvv" id="labelCVV">Código de segurança ou CVV</label>
+                    <input type="text" style="height: 40px" placeholder="000" class class="form-control" id="cvv" required="required" required="required" id="inputCVV" ></input>
+                </div>
+            </div>
+
+            <div class="form-row" id="divQtdeparcela">
+                <div class="form-group col-md-12">
+                    <label for="qtdeparcela" id="labelQtdeparcela">Selecione o Número de parcela:</label>
+                    <select class="form-control" required="required" id="selectQtdeparcela" style="height: 40px">
+                        <option value="01">1x</option>
+                        <option value="02">2x</option>
+                        <option value="03">3x</option>
+                        <option value="04">4x</option>
+                        <option value="05">5x</option>
+                        <option value="06">6x</option>
+                        <option value="07">7x</option>
+                        <option value="08">8x</option>
+                        <option value="09">9x</option>
+                        <option value="10">10x</option>
+                        <option value="11">11x</option>
+                        <option value="12">12x</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
         </form>
     </div>
 

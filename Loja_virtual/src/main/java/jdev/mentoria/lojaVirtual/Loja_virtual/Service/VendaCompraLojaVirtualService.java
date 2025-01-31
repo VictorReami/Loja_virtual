@@ -1,5 +1,8 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Service;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.ItemVendaLojaDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.VendaCompraLojaVirtualDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.ItemVendaLoja;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Model.VendaCompraLojaVirtual;
 import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.VendaCompraLojaVirtualRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,15 +73,36 @@ public class VendaCompraLojaVirtualService {
         Date date2 = dateFormat.parse(data2);
 
         return vendaCompraLojaVirtualRepository.consultaVendaFaixaData(date1, date2);
-
-        /*String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
-                + " where i.vendaCompraLojaVirtual.excluido = false "
-                + " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
-                + " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "'";
-
-        return entityManager.createQuery(sql).getResultList();*/
     }
-   // void salvaUrlRastreio(String urlRastreio, Long idVenda);
+
+
+    public VendaCompraLojaVirtualDTO consultaVenda(VendaCompraLojaVirtual vendaCompraLojaVirtual) {
+
+
+
+        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+
+        vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
+        vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+        vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
+        vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
+        vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+        vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+        vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+
+        for(ItemVendaLoja item : vendaCompraLojaVirtual.getItemVendaLoja()){
+
+            ItemVendaLojaDTO itemVendaLojaDTO = new ItemVendaLojaDTO();
+
+            itemVendaLojaDTO.setProduto(item.getProduto());
+            itemVendaLojaDTO.setQuantidade(item.getQuantidade());
+
+            vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaLojaDTO);
+        }
+
+        return vendaCompraLojaVirtualDTO;
+
+    }
 
 
 

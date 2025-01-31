@@ -188,33 +188,15 @@ public class VendaCompraLojaVirtualController {
 
     @ResponseBody
     @GetMapping(value = "/buscaCompraVendaLoja/{id}")
-    public ResponseEntity<VendaCompraLojaVirtualDTO> buscaCompraVendaLoja (@PathVariable("id") Long id){
+    public ResponseEntity<VendaCompraLojaVirtualDTO> buscaCompraVendaLoja (@PathVariable("id") Long idVenda){
 
-        VendaCompraLojaVirtual vendaCompraLojaVirtual  = vendaCompraLojaVirtualRepository.findByIdExclusao(id);
+        VendaCompraLojaVirtual vendaCompraLojaVirtual  = vendaCompraLojaVirtualRepository.findByIdExclusao(idVenda);
 
         if(vendaCompraLojaVirtual == null){
             vendaCompraLojaVirtual = new VendaCompraLojaVirtual();
         }
 
-        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
-
-        vendaCompraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
-        vendaCompraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
-        vendaCompraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
-        vendaCompraLojaVirtualDTO.setEnderecoEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
-        vendaCompraLojaVirtualDTO.setEnderecoCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
-        vendaCompraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
-        vendaCompraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
-
-        for(ItemVendaLoja item : vendaCompraLojaVirtual.getItemVendaLoja()){
-
-            ItemVendaLojaDTO itemVendaLojaDTO = new ItemVendaLojaDTO();
-
-            itemVendaLojaDTO.setProduto(item.getProduto());
-            itemVendaLojaDTO.setQuantidade(item.getQuantidade());
-
-            vendaCompraLojaVirtualDTO.getItemVendaLoja().add(itemVendaLojaDTO);
-        }
+        VendaCompraLojaVirtualDTO vendaCompraLojaVirtualDTO = vendaCompraLojaVirtualService.consultaVenda(vendaCompraLojaVirtual);
 
         return new ResponseEntity<VendaCompraLojaVirtualDTO>( vendaCompraLojaVirtualDTO, HttpStatus.OK);
     }

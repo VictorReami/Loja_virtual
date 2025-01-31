@@ -26,6 +26,8 @@ public class VendaCompraLojaVirtualDTO implements Serializable {
 
     private BigDecimal valorFrete;
 
+    @Getter
+    @Setter
     private Pessoa pessoa;
 
     private Endereco enderecoEntrega;

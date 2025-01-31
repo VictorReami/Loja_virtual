@@ -1,5 +1,9 @@
 package jdev.mentoria.lojaVirtual.Loja_virtual.Controller;
 
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.DTO.VendaCompraLojaVirtualDTO;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Model.VendaCompraLojaVirtual;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Repository.VendaCompraLojaVirtualRepository;
+import jdev.mentoria.lojaVirtual.Loja_virtual.Service.VendaCompraLojaVirtualService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,19 +18,29 @@ public class PagamentoController implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @RequestMapping(method = RequestMethod.GET, value = "**/pagamento/{idVendaCompra}")
+    private final VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
+    private final VendaCompraLojaVirtualService vendaCompraLojaVirtualService;
+
+    public PagamentoController(VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository, VendaCompraLojaVirtualService vendaCompraLojaVirtualService) {
+        this.vendaCompraLojaVirtualRepository = vendaCompraLojaVirtualRepository;
+        this.vendaCompraLojaVirtualService = vendaCompraLojaVirtualService;
+    }
+
+
+    //@RequestMapping(method = RequestMethod.GET, value = "/pagamento/{idVendaCompra}")
+    @GetMapping("/pagamento/{idVendaCompra}")
     public ModelAndView pagamento(@PathVariable(value = "idVendaCompra", required = false) String idVendaCompra) {
-/*
+
         ModelAndView modelAndView = new ModelAndView("pagamento");
 
-        VendaCompraLojaVirtual compraLojaVirtual = vd_Cp_Loja_virt_repository.findByIdExclusao(Long.parseLong(idVendaCompra));
+        VendaCompraLojaVirtual vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.findByIdExclusao(Long.parseLong(idVendaCompra));
 
-        if (compraLojaVirtual == null) {
+        if (vendaCompraLojaVirtual == null) {
             modelAndView.addObject("venda", new VendaCompraLojaVirtualDTO());
         }else {
-            modelAndView.addObject("venda", vendaService.consultaVenda(compraLojaVirtual));
-        }*/
+            modelAndView.addObject("venda", vendaCompraLojaVirtualService.consultaVenda(vendaCompraLojaVirtual));
+        }
 
-        return new ModelAndView("Pagamento");
+        return modelAndView;
     }
 }
